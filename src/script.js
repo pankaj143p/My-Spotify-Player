@@ -32,7 +32,7 @@ async function getSongs(folder) {
     songs = []
     for (let idx = 0; idx < as.length; idx++) {
         const ele = as[idx];
-        if (ele.href.endsWith(".mp3")) {
+        if (ele.href.endsWith(".mp3") || ele.href.endsWith(".m4a")) {
             songs.push(ele.href.split(`/${currFd}/`)[1])
         }
     }
