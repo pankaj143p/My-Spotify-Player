@@ -23,7 +23,8 @@ function formatTime(seconds) {
 // music play function
 async function getSongs(folder) {
     currFd = folder;
-    let a = await fetch(`http://127.0.0.1:5500/${currFd}/`)
+    // let a = await fetch(`/${currFd}/`)
+    let a = await fetch(`/${currFd}/`)
     let res = await a.text();
     // console.log(res)
     let div = document.createElement("div")
@@ -44,6 +45,8 @@ async function getSongs(folder) {
         songUL.innerHTML = songUL.innerHTML + `<li><img class="invert" width="34" src="../images/music.svg" alt="">
                             <div class="info">
                                 <div> ${song.replaceAll("%20", " ")}</div>
+                              
+
                                 <div>Pankaj</div>
                             </div>
                             <div class="playnow">
@@ -84,7 +87,7 @@ const playMusic = (track, pause = false) => {
 // add albums according to songs category
 async function displayAlbums() {
     console.log("album")
-    let a = await fetch(`http://127.0.0.1:5500/songs/`)
+    let a = await fetch(`/songs/`)
     let res = await a.text();
     let div = document.createElement("div")
     // console.log(res)
@@ -96,7 +99,7 @@ async function displayAlbums() {
     for (let idx = 0 ; idx < array.length; idx++) {
         const e = array[idx];
         // if (e.href.includes("/songs") && !e.href.includes(".htaccess")) {
-        if (e.href.includes("http://127.0.0.1:5500/songs/") && !e.href.includes(".htaccess")) {
+        if (e.href.includes("/songs/") && !e.href.includes(".htaccess")) {
             let folder = e.href.split("/").slice(-1)[0]
             let a = await fetch(`songs/${folder}/info.json`);
             let res = await a.json();
@@ -134,7 +137,7 @@ async function displayAlbums() {
 
 }
 async function main() {
-    await getSongs("songs/Mix");
+    await getSongs("songs/Ab");
     // console.log(songs)
     playMusic(songs[0], true)
 
