@@ -24,7 +24,7 @@ function formatTime(seconds) {
 async function getSongs(folder) {
     currFd = folder;
     // let a = await fetch(`/${currFd}/`)
-    let a = await fetch(`/${currFd}/`)
+    let a = await fetch(`/${folder}/`)
     let res = await a.text();
     // console.log(res)
     let div = document.createElement("div")
@@ -33,8 +33,8 @@ async function getSongs(folder) {
     songs = []
     for (let idx = 0; idx < as.length; idx++) {
         const ele = as[idx];
-        if (ele.href.endsWith(".mp3") || ele.href.endsWith(".m4a")) {
-            songs.push(ele.href.split(`/${currFd}/`)[1])
+        if (ele.href.endsWith(".m4a")) {
+            songs.push(ele.href.split(`/${folder}/`)[1])
         }
     }
 
@@ -76,7 +76,7 @@ const playMusic = (track, pause = false) => {
     // console.log("Source URL:", sourceURL);
     if (!pause) {
         curS.play();
-        play.src = '../images/pause.svg';
+        play.src = '../images/play.svg';
     }
     document.querySelector(".songinfo").innerHTML = decodeURI(track);
     document.querySelector(".songtime").innerHTML = "00:00/00:00";
@@ -99,9 +99,9 @@ async function displayAlbums() {
     for (let idx = 0 ; idx < array.length; idx++) {
         const e = array[idx];
         // if (e.href.includes("/songs") && !e.href.includes(".htaccess")) {
-        if (e.href.includes("/songs/") && !e.href.includes(".htaccess")) {
-            let folder = e.href.split("/").slice(-1)[0]
-            let a = await fetch(`songs/${folder}/info.json`);
+        if (e.href.includes("/songs") && !e.href.includes(".htaccess")) {
+            let folder = e.href.split("/").slice(-2)[0]
+            let a = await fetch(`/songs/${folder}/info.json`);
             let res = await a.json();
             console.log(res)
             cardContainer.innerHTML = cardContainer.innerHTML + ` <div data-folder="${folder}" class="card">
@@ -137,22 +137,33 @@ async function displayAlbums() {
 
 }
 async function main() {
-    await getSongs("songs/Ab");
+    await getSongs("songs/aa")
     // console.log(songs)
     playMusic(songs[0], true)
 
+ 
     await displayAlbums()
 
-    play.addEventListener("click", () => {
-        if (curS.paused) {
-            curS.play();
-            play.src = "../images/pause.svg";
-        } else {
-            curS.pause();
-            play.src = "../images/play.svg";
+    // play.addEventListener("click", () => {
+    //     if (curS.paused) {
+    //         curS.play()
+    //         play.src = "/images/pause.svg"
+    //     } else {
+    //         curS.pause()
+    //         play.src = "/images/play.svg"
 
+    //     }
+    // })
+        play.addEventListener("click", () => {
+        if (curS.paused) {
+            curS.play()
+            play.src = "images/pause.svg"
         }
-    });
+        else {
+            curS.pause()
+            play.src = "images/play.svg"
+        }
+    })
 
 
     // event listener current time of current playing song 
@@ -192,8 +203,8 @@ async function main() {
     next.addEventListener('click', () => {
         curS.pause()
         let index = songs.indexOf(curS.src.split("/").slice(-1)[0])
-        if (index + 1 < songs.length) {
-            playMusic(songs[(index + 1) % songs.length])
+        if ((index + 1) < songs.length) {
+            playMusic(songs[index + 1])
         }
     })
 
